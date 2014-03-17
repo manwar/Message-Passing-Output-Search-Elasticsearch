@@ -1,4 +1,6 @@
 {{ $NEXT }}
+
+0.002     2014-03-17 16:05:18+01:00 Europe/Vienna
     - fix named_index_and_type.t when Elasticsearch isn't installed
 
 0.001     2014-03-07 12:49:00+01:00 Europe/Vienna
