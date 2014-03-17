@@ -6,9 +6,19 @@ use Search::Elasticsearch::TestServer;
 use Message::Passing::Output::Search::Elasticsearch;
 
 my $server =
-    Search::Elasticsearch::TestServer->new( es_home => '/usr/share/elasticsearch', );
+    Search::Elasticsearch::TestServer->new(
+    es_home => '/usr/share/elasticsearch' );
 
-my $nodes = $server->start;
+my $nodes;
+
+# work around non-checked exec in TestServer which forks
+my $pid = $$;
+eval { $nodes = $server->start };
+exit
+    unless $pid == $$;
+
+plan skip_all => "Can't run tests without Elasticsearch server"
+    if $@;
 
 my $out_es;
 
