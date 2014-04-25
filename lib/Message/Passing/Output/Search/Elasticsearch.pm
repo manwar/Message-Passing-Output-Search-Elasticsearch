@@ -6,9 +6,8 @@ use Moo;
 use MooX::Types::MooseLike::Base
     qw( Str ArrayRef HashRef CodeRef is_CodeRef AnyOf ConsumerOf InstanceOf );
 
-#use Sub::Quote qw( quote_sub );
-use Search::Elasticsearch;
-use Search::Elasticsearch::Bulk;
+use Search::Elasticsearch::Async;
+use Promises backend => ['AnyEvent'];
 
 with 'Message::Passing::Role::Output';
 
@@ -26,7 +25,7 @@ The only two Elasticsearch specific fields are type and index name.
 
 =head2 es_params
 
-A hashref of L<Search::Elasticsearch/"CREATING A NEW INSTANCE"> parameters.
+A hashref of L<Search::Elasticsearch::Async/"CREATING A NEW INSTANCE"> parameters.
 
 =cut
 
@@ -38,8 +37,8 @@ has es_params => (
 
 =head2 es
 
-An object conforming to the L<Search::Elasticsearch::Role::Client> role. Can either be
-passed directly or gets constructed from L</es_params>.
+A L<Search::Elasticsearch::Async> instance. Can either be passed directly or
+gets constructed from L</es_params>.
 
 =cut
 
@@ -49,13 +48,14 @@ has es => (
     isa     => ConsumerOf ['Search::Elasticsearch::Role::Client'],
     builder => sub {
         my $self = shift;
-        return Search::Elasticsearch->new( %{ $self->es_params } );
+        return Search::Elasticsearch::Async->new( %{ $self->es_params } );
     },
 );
 
 =head2 es_bulk_params
 
-A hashref of L<Search::Elasticsearch::Bulk/"CREATING A NEW INSTANCE"> parameters.
+A hashref of L<Search::Elasticsearch::Async::Bulk/"CREATING A NEW INSTANCE">
+parameters.
 
 =cut
 
@@ -67,19 +67,22 @@ has es_bulk_params => (
 
 =head2 es_bulk
 
-A L<Search::Elasticsearch::Bulk> instance. Can either be passed directly or gets
-constructed from L</es_bulk_params> in which case 'es' is set to L</es>.
+A L<Search::Elasticsearch::Async::Bulk> instance. Can either be passed
+directly or gets constructed from L</es> and L</es_bulk_params> using
+bulk_helper.
 
 =cut
 
 has es_bulk => (
-    is      => 'ro',
-    lazy    => 1,
-    isa     => InstanceOf ['Search::Elasticsearch::Bulk'],
+    is   => 'ro',
+    lazy => 1,
+    isa  => ConsumerOf [
+        'Search::Elasticsearch::Role::Bulk',
+        'Search::Elasticsearch::Role::Is_Async'
+    ],
     builder => sub {
         my $self = shift;
-        return Search::Elasticsearch::Bulk->new( %{ $self->es_bulk_params },
-            es => $self->es );
+        return $self->es->bulk_helper( %{ $self->es_bulk_params } );
     },
 );
 
