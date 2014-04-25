@@ -17,7 +17,6 @@ This output is intentionally kept simple to not add dependencies.
 If you need a special format use a filter like
 L<Message::Passing::Filter::ToLogstash> before sending messages to this
 output.
-The only two Elasticsearch specific fields are type and index name.
 
 =cut
 
