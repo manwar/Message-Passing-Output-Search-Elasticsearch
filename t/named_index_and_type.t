@@ -4,7 +4,7 @@ use Test::More;
 use Test::Exception;
 use Search::Elasticsearch::TestServer;
 use Message::Passing::Output::Search::Elasticsearch;
-use Search::Elasticsearch::Async::Bulk;
+use Search::Elasticsearch::Client::5_0::Async::Bulk;
 use Search::Elasticsearch;
 use AnyEvent;
 
@@ -51,7 +51,7 @@ lives_ok {
 
 lives_ok {
     $out_es = Message::Passing::Output::Search::Elasticsearch->new(
-        es_bulk    => Search::Elasticsearch::Async::Bulk->new( es => $es ),
+        es_bulk    => Search::Elasticsearch::Client::5_0::Async::Bulk->new( es => $es ),
         type       => 'syslog',
         index_name => 'syslog',
     );

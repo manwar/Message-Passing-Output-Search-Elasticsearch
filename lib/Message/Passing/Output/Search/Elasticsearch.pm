@@ -53,7 +53,8 @@ has es => (
 
 =head2 es_bulk_params
 
-A hashref of L<Search::Elasticsearch::Async::Bulk/"CREATING A NEW INSTANCE">
+A hashref of
+L<Search::Elasticsearch::Client::5_0::Async::Bulk/"CREATING A NEW INSTANCE">
 parameters.
 
 =cut
@@ -66,8 +67,8 @@ has es_bulk_params => (
 
 =head2 es_bulk
 
-A L<Search::Elasticsearch::Async::Bulk> instance. Can either be passed
-directly or gets constructed from L</es> and L</es_bulk_params> using
+A L<Search::Elasticsearch::Client::5_0::Async::Bulk> instance. Can either be
+passed directly or gets constructed from L</es> and L</es_bulk_params> using
 bulk_helper.
 
 =cut
@@ -76,7 +77,7 @@ has es_bulk => (
     is   => 'ro',
     lazy => 1,
     isa  => ConsumerOf [
-        'Search::Elasticsearch::Role::Bulk',
+        'Search::Elasticsearch::Client::5_0::Role::Bulk',
         'Search::Elasticsearch::Role::Is_Async'
     ],
     builder => sub {
@@ -114,7 +115,7 @@ has index_name => (
 =head1 METHODS
 
 =head2 consume ($msg)
- 
+
 Consumes a message, queuing it for consumption by Elasticsearch.
 Assumes that the message is a hashref, skips silently in case it isn't.
 
@@ -151,7 +152,7 @@ sub consume {
     #        '@fields' => $data,
     #        exists( $data->{uuid} ) ? ( id => delete( $data->{uuid} ) ) : (),
     #    };
-    $self->es_bulk->create(
+    $self->es_bulk->index(
         {   index  => $index_name,
             type   => $type,
             source => $data,
@@ -162,9 +163,9 @@ sub consume {
 1;
 
 =head1 SEE ALSO
- 
+
 =over
- 
+
 =item L<Message::Passing>
 
 =back
