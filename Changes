@@ -1,4 +1,6 @@
 {{ $NEXT }}
+
+0.003     2016-11-18 10:31:40+01:00 Europe/Vienna
     - now asynchronous
     - compatible with Elasticsearch 5.0
 
