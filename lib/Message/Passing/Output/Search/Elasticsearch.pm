@@ -54,7 +54,7 @@ has es => (
 =head2 es_bulk_params
 
 A hashref of
-L<Search::Elasticsearch::Client::5_0::Async::Bulk/"CREATING A NEW INSTANCE">
+L<Search::Elasticsearch::Client::6_0::Async::Bulk/"CREATING A NEW INSTANCE">
 parameters.
 
 =cut
@@ -67,7 +67,7 @@ has es_bulk_params => (
 
 =head2 es_bulk
 
-A L<Search::Elasticsearch::Client::5_0::Async::Bulk> instance. Can either be
+A L<Search::Elasticsearch::Client::6_0::Async::Bulk> instance. Can either be
 passed directly or gets constructed from L</es> and L</es_bulk_params> using
 bulk_helper.
 
@@ -77,7 +77,7 @@ has es_bulk => (
     is   => 'ro',
     lazy => 1,
     isa  => ConsumerOf [
-        'Search::Elasticsearch::Client::5_0::Role::Bulk',
+        'Search::Elasticsearch::Client::6_0::Role::Bulk',
         'Search::Elasticsearch::Role::Is_Async'
     ],
     builder => sub {
